@@ -61,7 +61,7 @@ def connect(database\_name):
 
                                  port="5432",
 
-                                 database=database\_name
+                                 database=database_name
 
                                  )
 
@@ -151,117 +151,91 @@ Similarly , we have made the connection and cursor object and deleted the data f
 Finally we have closed the cursor and the connection.
 
 
-\4) extract\_data\_from\_ecommerce\_dump.py file inside the src/pipeline folder.
+## 4) extract_data_from_ecommerce_dump.py file inside the src/pipeline folder.
+* `src/pipeline/extract_data_from_ecommerce_dump.py`
 
-import sys
+```
 
-file\_path = '/home/sandesh/Desktop/Leapfrog/Data/3rd Week(OLAP Design)/Day3'
-
-sys.path.append(file\_path)
-
-from src.helper import execute\_select\_query
-
+from src.helper import execute_select_query
 from src.utils import connect
 
-def extract\_data\_from\_ecommerce():
+def extract_data_from_ecommerce():
+    """This is a method to extract data from ecommerce database"""
 
-`   `"""This is a method to extract data from ecommerce database"""
+    query = """
+    SELECT s.user_id , u.username,p.id,c.id,c.name,
+    p.price,s.price,s.quantity,(p.quantity-s.quantity),
+    s.updated_at  
+    FROM sales s
+    INNER JOIN users u
+        ON s.user_id = u.id
+    INNER JOIN products p
+        ON s.product_id = p.id
+    INNER JOIN categories c 
+        ON  p.category_id = c.id
+    """
+    data=execute_select_query(query,connect("ecommerce_dumb"))
+    return data
+```
 
-`   `query = """
-
-`   `SELECT s.user\_id , u.username,p.id,c.id,c.name,
-
-`   `p.price,s.price,s.quantity,(p.quantity-s.quantity),
-
-`   `s.updated\_at 
-
-`   `FROM sales s
-
-`   `INNER JOIN users u
-
-`       `ON s.user\_id = u.id
-
-`   `INNER JOIN products p
-
-`       `ON s.product\_id = p.id
-
-`   `INNER JOIN categories c
-
-`       `ON  p.category\_id = c.id
-
-`   `"""
-
-`   `data=execute\_select\_query(query,connect("ecommerce\_dumb"))
-
-`   `return data
-
-This is the method[extract\_data\_from\_ecommerce()], which is used to extract the necessary data from the ecommerce\_dumb database.
+This is the method `extract_data_from_ecommerce()`, which is used to extract the necessary data from the `ecommerce_dumb` database.
 
 This method has a query to select the necessary data.
 
-After that , we use the above mentioned method in  3(i) , to execute the select query by passing the necessary parameter which is the respective query and connect method which takes the database\_name as a parameter.
+After that , we use the above mentioned method in  3(i) i.e. `execute_select_query(query,connection)` , to execute the select query by passing the necessary parameter which is the respective query and connect method which takes the database_name as a parameter.
 
 Finally it returns the data.
 
-\5. load\_data\_to\_sales\_and\_sales\_arhcive.py file inside the src/pipeline folder.
+## 5. load_data_to_sales_and_sales_arhcive.py file inside the src/pipeline folder.
 
+```
 import sys
-
-file\_path = '/home/sandesh/Desktop/Leapfrog/Data/3rd Week(OLAP Design)/Day3'
-
-sys.path.append(file\_path)
-
+file_path = '/home/sandesh/Desktop/Leapfrog/Data/3rd Week(OLAP Design)/Day3'
+sys.path.append(file_path)
+```
 Firstly , I have used the absolute path to import necessary modules.
 
+
+```
 from src.utils import connect  
+```
+Importing of the connect function from `src/utils.py` file as described above in (2).
 
-Importing of the connect function from src/utils file as described above in (2).
 
-#importing different SQL queries function
 
-from src.helper import execute\_select\_query
-
-from src.helper import execute\_insert\_query
-
-from src.helper import  execute\_delete\_query
-
+```
+from src.helper import execute_select_query
+from src.helper import execute_insert_query
+from src.helper import  execute_delete_query
+```
 Importing different functions to execute the necessary SQL queries, It is described above in detail at (3).
 
-from src.pipeline.extract\_data\_from\_ecommerce\_dump import extract\_data\_from\_ecommerce
+```
+from src.pipeline.extract_data_from_ecommerce_dump import extract_data_from_ecommerce
+```
+This is the function to extract the data from the `ecommerce_dump` database.It is describe above in detail at (4).
 
-This is the function to extract the data from the ecommerce\_dump database.It is describe above in detail at (4).
+```
+def load_sales_to_sales_archive():
+    """This is the method to select data from sales_raw and push to the sales_archive"""
 
-def load\_sales\_to\_sales\_archive():
+    #query to select all the data from sales table of sales_raw database
+    query="""
+    SELECT * FROM sales
+    """
+    data=execute_select_query(query,connect("sales_raw"))
 
-`   `"""This is the method to select data from sales\_raw and push to the sales\_archive"""
+    #query to insert all the data to sales table of sales_archive database
+    query_1= """
+    INSERT INTO sales VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """
+    #execute the above insert query
+    execute_insert_query(query_1,connect("sales_archive"),data)
+```
+This is the method which selects all the data from the `sales` table from `sales_raw` database
+by executing the select query function to get the necessary data.i.e `execute_select_query(query,connect("sales_raw"))`
 
-`   `#query to select all the data from sales table of sales\_raw database
-
-`   `query="""
-
-`   `SELECT \* FROM sales
-
-`   `"""
-
-`   `data=execute\_select\_query(query,connect("sales\_raw"))
-
-`   `#query to insert all the data to sales table of sales\_archive database
-
-`   `query\_1= """
-
-`   `INSERT INTO sales VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-
-`   `"""
-
-`   `#execute the above insert query
-
-`   `execute\_insert\_query(query\_1,connect("sales\_archive"),data)
-
-This is the method which selects all the data from the sales table from sales\_raw database
-
-and execute the select query function to get the necessary data.
-
-After that it inserts the data to the sales table of sales\_archive database.
+After that it inserts the data to the sales table of `sales_archive` database.i.e `execute_insert_query(query_1,connect("sales_archive"),data)`
 
 def load\_data\_to\_sales\_raw\_and\_archive():
 
