@@ -3,7 +3,7 @@
 > ## The file structure of this repo:
 ```
 data/             # Folder containing the datasets in different formats.
-  *.sql
+  ecommerce.sql
  docs/           # Folder containing .md files for assignment.      
    *.md
 schema/          # Folder containing different create sql quiries.
