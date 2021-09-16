@@ -50,95 +50,71 @@ The description of different attributes of sales columns are:
 
 We use Postgresql database and use python driver Psycopg2 to connect it .So, we make a method to that with the parameter database\_name to connect to the respective database.
 
+```
 Import psycopg2
-
 def connect(database\_name):
+    return psycopg2.connect(user="postgres",
 
-`   `return psycopg2.connect(user="postgres",
+                                 password="admin",
 
-`                                 `password="admin",
+                                 host="localhost",
 
-`                                 `host="localhost",
+                                 port="5432",
 
-`                                 `port="5432",
+                                 database=database\_name
 
-`                                 `database=database\_name
+                                 )
 
-`                                 `)
+```
 
-
-
-3.healper.py file inside src
+## 3.healper.py file inside src
 
 There are three methods inside the helper.py file inside src, I will explain them respectively.
 
-i) 
+# i) 
 
-def execute\_select\_query(query,connection):
+```
+def execute_select_query(query,connection):
+    """This is the method to execute the select sql query given the parameter the query and connection method"""
+    try:
+        conn=connection
+        cur=conn.cursor()
+        cur.execute(query)
+        data=cur.fetchall()
 
-`   `"""This is the method to execute the select sql query given the parameter the query and connection method"""
-
-`   `try:
-
-`       `conn=connection
-
-`       `#print(conn)
-
-`       `cur=conn.cursor()
-
-`       `cur.execute(query)
-
-`       `data=cur.fetchall()
-
-`   `except(Exception) as e:
-
-`       `print(e)
-
-`   `finally:
-
-`       `if(conn):
-
-`           `cur.close()
-
-`           `conn.close()
-
-`           `return data
+    except(Exception) as e:
+        print(e)
+    finally:
+    if(conn):
+        cur.close()
+        conn.close()
+        return data
+```
 
 This is the method which executes the select query given the parameters, query and connection.
 
 So, here we have made the connection and cursor object and executed the query.After the query is executed we have fetched all the data and finally closed the cursor and connection and returned the respective data.
 
-ii)
+# ii)
 
-def execute\_insert\_query(query,connection,data):
+```
+def execute_insert_query(query,connection,data):
+    """This is the method to execute the insert sql query given the parameter the query and connection method and data"""
 
-`   `"""This is the method to execute the insert sql query given the parameter the query and connection method and data"""
-
-`   `try:
-
-`       `conn=connection
-
-`       `cur=conn.cursor()
-
-`       `for item in data:
-
-`           `cur.execute(query,item)
-
-`       `conn.commit()
-
-`       `print(query +" ,Successfully inserted data")
-
-`   `except(Exception) as e:
-
-`       `print(e)
-
-`   `finally:
-
-`       `if(conn):
-
-`           `cur.close()
-
-`           `conn.close()
+    try:
+        conn=connection
+        cur=conn.cursor()
+        for item in data:
+            cur.execute(query,item)
+        conn.commit()
+        print(query+",Sucessfully inserted data")
+    except(Exception) as e:
+        print(e)
+    finally:
+        if(conn):
+            cur.close()
+            conn.close()
+```
 
 
 This is the method which executes the insert query given the parameter query , connection and data to be inserted.
@@ -148,37 +124,25 @@ Similarly , we have made the connection and cursor object and looped over the da
 Finally we have closed the cursor and the connection.
 
 
-iii)
+# iii)
 
-def execute\_delete\_query(query,connection):
-
-`   `"""This is the method which deletes the table contents"""
-
-
-
-`   `try:
-
-`       `conn=connection
-
-`       `cur=conn.cursor()
-
-`       `cur.execute(query)
-
-`       `conn.commit()
-
-`       `print(query +", Successfully deleted data from sales table of sales\_raw")
-
-`   `except(Exception) as e:
-
-`       `print(e)
-
-`   `finally:
-
-`       `if(conn):
-
-`           `cur.close()
-
-`           `conn.close()
+```
+def execute_delete_query(query,connection):
+    """This is the method which deletes the table contents"""
+    
+    try:
+        conn=connection
+        cur=conn.cursor()
+        cur.execute(query)
+        conn.commit()
+        print(query+",Sucessfully deleted data from sales table of sales_raw")
+    except(Exception) as e:
+        print(e)
+    finally:
+        if(conn):
+            cur.close()
+            conn.close()
+```
 
 This is the method to delete all the data from a table, give the query and connection object.
 
