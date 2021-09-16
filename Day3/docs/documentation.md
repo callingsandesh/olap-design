@@ -4,29 +4,31 @@
 
 --creating table sales
 
+```
 CREATE TABLE sales(
 
-`   `user\_id INTEGER,
+    user\_id INTEGER,
 
-`   `username VARCHAR(45) NOT NULL,
+    username VARCHAR(45) NOT NULL,
 
-`   `product\_id INTEGER,
+    product\_id INTEGER,
 
-`   `category\_id INTEGER,
+    category\_id INTEGER,
 
-`   `category\_name VARCHAR(45),
+    category\_name VARCHAR(45),
 
-`   `current\_price DOUBLE PRECISION NOT NULL,
+    current\_price DOUBLE PRECISION NOT NULL,
 
-`   `sold\_price DOUBLE PRECISION,
+    sold\_price DOUBLE PRECISION,
 
-`   `sold\_quantity INTEGER,
+    sold\_quantity INTEGER,
 
-`   `remaining\_quantity INTEGER,
+    remaining\_quantity INTEGER,
 
-`   `sales\_date TIMESTAMP
+    sales\_date TIMESTAMP
 
 );
+```
 
 Here, I have created a sales table with necessary columns required.
 
