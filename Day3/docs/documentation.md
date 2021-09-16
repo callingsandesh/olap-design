@@ -232,8 +232,7 @@ def load_sales_to_sales_archive():
     #execute the above insert query
     execute_insert_query(query_1,connect("sales_archive"),data)
 ```
-This is the method which selects all the data from the `sales` table from `sales_raw` database
-by executing the select query function to get the necessary data.i.e `execute_select_query(query,connect("sales_raw"))`
+This is the method which selects all the data from the `sales` table from `sales_raw` database by executing the select query function to get the necessary data.i.e `execute_select_query(query,connect("sales_raw"))`
 
 After that it inserts the data to the sales table of `sales_archive` database.i.e `execute_insert_query(query_1,connect("sales_archive"),data)`
 
@@ -267,10 +266,3 @@ After that is loades the data available in `sales_raw` database to `sales_archiv
 Then , after successfully loading the data from `sale_raw` database to `sale_archive` , we can clear the `sales_raw` database, so we execute the delete query in the sales table of `sales_raw` database.i.e. `execute_delete_query(query,connect("sales_raw"))` passing the necessary parameters.
 
 After that the necessary new data is inserted into the `sales_raw` by calling the `execute_insert_query(query,connect("sales_raw"),data)` passing the necessary parameters..
-
-
-
-
-
-
-
