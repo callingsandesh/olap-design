@@ -1,4 +1,4 @@
-﻿1.Explanation about create\_table\_sale.sql file in schema.
+﻿## 1.Explanation about create\_table\_sale.sql file in schema.
 
 - schema/create\_table\_sales.sql
 
