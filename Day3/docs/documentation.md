@@ -7,25 +7,25 @@
 ```
 CREATE TABLE sales(
 
-    user\_id INTEGER,
+    user_id INTEGER,
 
     username VARCHAR(45) NOT NULL,
 
-    product\_id INTEGER,
+    product_id INTEGER,
 
-    category\_id INTEGER,
+    category_id INTEGER,
 
-    category\_name VARCHAR(45),
+    category_name VARCHAR(45),
 
-    current\_price DOUBLE PRECISION NOT NULL,
+    current_price DOUBLE PRECISION NOT NULL,
 
-    sold\_price DOUBLE PRECISION,
+    sold_price DOUBLE PRECISION,
 
-    sold\_quantity INTEGER,
+    sold_quantity INTEGER,
 
-    remaining\_quantity INTEGER,
+    remaining_quantity INTEGER,
 
-    sales\_date TIMESTAMP
+    sales_date TIMESTAMP
 
 );
 ```
