@@ -237,42 +237,36 @@ by executing the select query function to get the necessary data.i.e `execute_se
 
 After that it inserts the data to the sales table of `sales_archive` database.i.e `execute_insert_query(query_1,connect("sales_archive"),data)`
 
-def load\_data\_to\_sales\_raw\_and\_archive():
+```
+def load_data_to_sales_raw_and_archive():
+    """This is the method which is performs all the necessary work of ETL"""
 
-`   `"""This is the method which is performs all the necessary work of ETL"""
+    #extracting data from ecommerce_dump database
+    data = extract_data_from_ecommerce()
 
-`   `#extracting data from ecommerce\_dump database
+    # Making all the data inside sale_raw database archive
+    load_sales_to_sales_archive()
 
-`   `data = extract\_data\_from\_ecommerce()
-
-`   `# Making all the data inside sale\_raw database archive
-
-`   `load\_sales\_to\_sales\_archive()
-
-`   `## deleting all the data from sales table of sales\_raw database as we have already archived it
-
-`   `query=""" DELETE FROM sales"""
-
-`   `execute\_delete\_query(query,connect("sales\_raw"))
+    ## deleting all the data from sales table of sales_raw database as we have already archived it
+    query=""" DELETE FROM sales"""
+    execute_delete_query(query,connect("sales_raw"))
 
 
-`   `# query to insert data into table sales of sales\_raw database
+    # query to insert data into table sales of sales_raw database
+    query="""
+    INSERT INTO sales VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """
 
-`   `query="""
+    execute_insert_query(query,connect("sales_raw"),data)
+```
 
-`   `INSERT INTO sales VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+This is the method which is called in the main method.Firsty , it fetches all the data from the ecommerce\_dump by calling the function `extract_data_from_ecommerce()`.
 
-`   `"""
+After that is loades the data available in `sales_raw` database to `sales_archive` database.
 
-`   `execute\_insert\_query(query,connect("sales\_raw"),data)
+Then , after successfully loading the data from `sale_raw` database to `sale_archive` , we can clear the `sales_raw` database, so we execute the delete query in the sales table of `sales_raw` database.i.e. `execute_delete_query(query,connect("sales_raw"))` passing the necessary parameters.
 
-This is the method which is called in the main method.Firsty , it fetches all the data from the ecommerce\_dump by calling the function extract\_data\_from\_ecommerce().
-
-After that is loades the data available in sales\_raw database to sales\_archive database.
-
-Then , after successfully loading the data from sale\_raw database to sale\_archive , we can clear the sales\_raw database, so we execute the delete query in the sales table of sales\_raw database.
-
-After that the necessary new data is inserted into the sales\_raw by calling the execute\_insert\_query().
+After that the necessary new data is inserted into the `sales_raw` by calling the `execute_insert_query(query,connect("sales_raw"),data)` passing the necessary parameters..
 
 
 
