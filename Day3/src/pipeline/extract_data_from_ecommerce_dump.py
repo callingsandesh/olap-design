@@ -3,7 +3,7 @@ file_path = '/home/sandesh/Desktop/Leapfrog/Data/3rd Week(OLAP Design)/Day3'
 sys.path.append(file_path)
 
 from src.helper import execute_select_query
-from src.utils import connect_to_ecommerce_dump
+from src.utils import connect
 
 def extract_data_from_ecommerce():
     """This is a method to extract data from ecommerce database"""
@@ -20,6 +20,6 @@ def extract_data_from_ecommerce():
     INNER JOIN categories c 
         ON  p.category_id = c.id
     """
-    data=execute_select_query(query,connect_to_ecommerce_dump())
+    data=execute_select_query(query,connect("ecommerce_dumb"))
     return data
 
