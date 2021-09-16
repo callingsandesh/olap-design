@@ -1,6 +1,6 @@
 ﻿## 1.Explanation about create\_table\_sale.sql file in schema.
 
-* `schema/create\_table\_sales.sql`
+* `schema/create_table_sales.sql`
 
 
 ```
@@ -44,9 +44,9 @@ The description of different attributes of sales columns are:
 - sales\_data:TIMESTAMP is used as it is the date and time of the product sold. 
 
 
-\2. utils.py file inside src
+## 2. utils.py file inside src
 
-- src/utils.py
+* `src/utils.py`
 
 We use Postgresql database and use python driver Psycopg2 to connect it .So, we make a method to that with the parameter database\_name to connect to the respective database.
 
