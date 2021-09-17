@@ -56,7 +56,7 @@ SELECT
   
   ` SELECT * FROM main_table `
   
-  [!Image ](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
+  ![Image ](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
   
   
   
