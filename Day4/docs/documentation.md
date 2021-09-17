@@ -56,6 +56,6 @@ SELECT
   
   ![Image of dsadsa](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
   
-  
+  CLICK HERE TO SEE IMAGE[https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png]
   
 
