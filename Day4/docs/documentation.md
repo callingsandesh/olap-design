@@ -54,7 +54,7 @@ SELECT
   
   The above table will cerate a view from the existing raw_tables.
   
-  ![Image of main_table](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/SS%20of%20tables/1_main_table.png)
+  ![Image of main_table](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
   
   
   
