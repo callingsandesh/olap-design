@@ -54,8 +54,162 @@ SELECT
   
   The above table will cerate a view from the existing raw_tables.
   
+  ``` SELECT * FROM main_table ```
+  
   ![Image of dsadsa](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
   
   CLICK HERE TO SEE IMAGE[https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png]
+  
+  
+  * `schema\2_main_table_agg.sql`
+  ```
+  CREATE VIEW main_table_agg AS
+SELECT 
+	agg_main_table.employee_id,agg_main_table.shift_date ,
+	SUM(hours_worked) AS "hours_worked",
+	sum(has_taken_break) AS "has_taken_break",
+	sum(break_hour) AS "break_hour",
+	sum(was_charge) AS "was_charge",
+	sum(charge_hour) AS "charge_hour",
+	sum(was_on_call) AS "was_on_call",
+	sum(on_call_hour) AS "on_call_hour"
+	
+FROM main_table as agg_main_table
+GROUP BY agg_main_table.employee_id,agg_main_table.shift_date
+
+  ```
+  It will create aggregate of difference columns like hours_worked,has_taken_break,break_hour,was_charge,charge_hour,was_on_call,on_call_hour FROM the `main_table`
+  
+  ![Image of main_table_agg]()
+  
+  
+  * `schema\3_array_agg_shift_type.sql`
+  ```
+  CREATE VIEW agg_shift AS
+select employee_id,shift_date,array_agg(shift_type) AS shift_type
+from main_table 
+group by employee_id,shift_date
+  ```
+  It will create the array of aggregates of shift types from the column by grouping by the employee_id and shift_date
+  
+  [!Image of agg_shift]()
+  
+  
+  
+  * `schema\4_attendence_view.sql`
+  ```
+  CREATE OR REPLACE VIEW attendence_view AS 
+	SELECT 
+	DISTINCT main_table.employee_id,shift_date,
+	attendence
+	FROM main_table
+  ```
+  `SELECT * FROM attendence_view`
+  [!Image of attendence_view]()
+  
+  
+  
+  * `schema\5_department_view.sql`
+  ```CREATE VIEW department_view AS
+	SELECT attendence_view.employee_id,attendence_view.shift_date,attendence_view.attendence,d.id as department_id
+	FROM attendence_view
+	INNER JOIN employee e
+ 		ON attendence_view.employee_id = e.employee_id
+	INNER JOIN department d
+		ON e.department_id = d.client_department_id
+  ```
+  SELECT * FROM department_view`
+  [!Image ]()
+  
+  
+  
+  * `schema\6_num_teammates_absent.sql`
+  ```CREATE VIEW num_teammate_absent AS
+	SELECT 
+	demo.shift_date,demo.department_id,COUNT(*)-SUM(attendence) AS num_teammates_absent
+	FROM (
+	SELECT attendence_view.employee_id,attendence_view.shift_date,attendence_view.attendence,d.id as department_id
+	FROM attendence_view
+	INNER JOIN employee e
+ 		ON attendence_view.employee_id = e.employee_id
+	INNER JOIN department d
+		ON e.department_id = d.client_department_id
+	) AS demo
+	GROUP BY demo.shift_date,demo.department_id
+  ```
+  SELECT * FROM num_teammate_absent`
+  [!Image ]()
+  
+  
+
+  
+  
+  * `schema\7_semi_final_view.sql`
+  ```CREATE VIEW semi_final_table AS
+SELECT 
+mt.employee_id,
+d.department_id,
+mt.shift_date,
+agg_shift.shift_type,
+mt.hours_worked,
+d.attendence,
+mt.has_taken_break,
+mt.break_hour,
+mt.was_charge,
+mt.charge_hour,
+mt.was_on_call,
+mt.on_call_hour,
+num_teammate_absent.num_teammates_absent 
+
+FROM main_table_agg mt
+INNER JOIN department_view d
+	ON (mt.employee_id,mt.shift_date)=(d.employee_id,d.shift_date)
+INNER JOIN agg_shift
+	ON (mt.employee_id,mt.shift_date) = (agg_shift.employee_id,agg_shift.shift_date)
+LEFT JOIN num_teammate_absent 
+	ON (mt.shift_date,d.department_id) = (num_teammate_absent.shift_date,num_teammate_absent.department_id)
+  ```
+  `SELECT * FROM semi_final_view`
+  [!Image ]()
+  
+  
+  * `schema\8_array_agg_shift_times.sql`
+  ```CREATE VIEW array_agg_shift_times AS
+	SELECT employee_id,shift_date,array_agg(shift_start_time) AS shift_start_time,array_agg(shift_end_time) AS 	   shift_end_time
+	FROM main_table
+	GROUP BY employee_id,shift_date
+  ```
+  SELECT * FROM 8_array_agg_shift_times`
+  [!Image ]()
+  
+    * `schema\9_final_table.sql`
+  ```--FINAL TABLE
+CREATE VIEW final_table AS
+SELECT 
+mt.employee_id,
+mt.department_id,
+ag.shift_start_time,
+ag.shift_end_time,
+mt.shift_date,
+mt.shift_type,
+mt.hours_worked,
+mt.attendence,
+mt.has_taken_break,
+mt.break_hour,
+mt.was_charge,
+mt.charge_hour,
+mt.was_on_call,
+mt.on_call_hour,
+mt.num_teammates_absent 
+FROM semi_final_table mt
+INNER JOIN array_agg_shift_times ag
+	ON (mt.employee_id,mt.shift_date) = (ag.employee_id,ag.shift_date)
+  ```
+  SELECT * FROM final_table`
+  [!Image ]()
+  
+  
+  
+  
   
 
