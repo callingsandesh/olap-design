@@ -50,7 +50,7 @@ SELECT
             ON t.employee_id = e.employee_id
         INNER JOIN department d
             ON e.department_id = d.client_department_id
-	```
+```
   
   The above table will cerate a view from the existing raw_tables.
   
@@ -58,7 +58,6 @@ SELECT
   
   [!Image ](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
   
-  CLICK HERE TO SEE IMAGE[https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png]
   
   
   * `schema\2_main_table_agg.sql`
