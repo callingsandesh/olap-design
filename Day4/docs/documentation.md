@@ -54,7 +54,7 @@ SELECT
   
   The above table will cerate a view from the existing raw_tables.
   
-  ``` SELECT * FROM main_table ```
+  ` SELECT * FROM main_table `
   
   [!Image ](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
   
