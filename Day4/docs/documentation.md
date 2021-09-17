@@ -251,7 +251,7 @@ CREATE TABLE timesheet(
 
 A glimpse of final table
 
-![Image ]()
+![Image ](https://github.com/callingsandesh/Leapfrog-Assignment/blob/elt-day4/Data/3rd%20Week(OLAP%20Design)/Day4/docs/SS%20of%20tables/glimpse_of_final_table.png)
   
   
   
