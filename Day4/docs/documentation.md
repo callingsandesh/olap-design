@@ -56,7 +56,7 @@ SELECT
   
   ``` SELECT * FROM main_table ```
   
-  ![Image of dsadsa](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
+  [!Image ](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png)
   
   CLICK HERE TO SEE IMAGE[https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/1_main_table.png]
   
@@ -80,23 +80,26 @@ GROUP BY agg_main_table.employee_id,agg_main_table.shift_date
   ```
   It will create aggregate of difference columns like hours_worked,has_taken_break,break_hour,was_charge,charge_hour,was_on_call,on_call_hour FROM the `main_table`
   
-  ![Image of main_table_agg]()
+  ![Image]()
   
   
   * `schema\3_array_agg_shift_type.sql`
+  
   ```
   CREATE VIEW agg_shift AS
 select employee_id,shift_date,array_agg(shift_type) AS shift_type
 from main_table 
 group by employee_id,shift_date
   ```
-  It will create the array of aggregates of shift types from the column by grouping by the employee_id and shift_date
+ 
+ It will create the array of aggregates of shift types from the column by grouping by the employee_id and shift_date
   
-  [!Image of agg_shift]()
+  [!Image ]()
   
   
   
   * `schema\4_attendence_view.sql`
+  
   ```
   CREATE OR REPLACE VIEW attendence_view AS 
 	SELECT 
@@ -105,12 +108,13 @@ group by employee_id,shift_date
 	FROM main_table
   ```
   `SELECT * FROM attendence_view`
-  [!Image of attendence_view]()
+  [!Image]()
   
   
   
   * `schema\5_department_view.sql`
-  ```CREATE VIEW department_view AS
+  ```
+  CREATE VIEW department_view AS
 	SELECT attendence_view.employee_id,attendence_view.shift_date,attendence_view.attendence,d.id as department_id
 	FROM attendence_view
 	INNER JOIN employee e
@@ -118,7 +122,7 @@ group by employee_id,shift_date
 	INNER JOIN department d
 		ON e.department_id = d.client_department_id
   ```
-  SELECT * FROM department_view`
+  `SELECT * FROM department_view`
   [!Image ]()
   
   
@@ -137,7 +141,7 @@ group by employee_id,shift_date
 	) AS demo
 	GROUP BY demo.shift_date,demo.department_id
   ```
-  SELECT * FROM num_teammate_absent`
+  `SELECT * FROM num_teammate_absent`
   [!Image ]()
   
   
@@ -145,21 +149,22 @@ group by employee_id,shift_date
   
   
   * `schema\7_semi_final_view.sql`
-  ```CREATE VIEW semi_final_table AS
-SELECT 
-mt.employee_id,
-d.department_id,
-mt.shift_date,
-agg_shift.shift_type,
-mt.hours_worked,
-d.attendence,
-mt.has_taken_break,
-mt.break_hour,
-mt.was_charge,
-mt.charge_hour,
-mt.was_on_call,
-mt.on_call_hour,
-num_teammate_absent.num_teammates_absent 
+  ```
+  CREATE VIEW semi_final_table AS
+  SELECT 
+	mt.employee_id,
+	d.department_id,
+	mt.shift_date,
+	agg_shift.shift_type,
+	mt.hours_worked,
+	d.attendence,
+	mt.has_taken_break,
+	mt.break_hour,
+	mt.was_charge,
+	mt.charge_hour,
+	mt.was_on_call,
+	mt.on_call_hour,
+	num_teammate_absent.num_teammates_absent 
 
 FROM main_table_agg mt
 INNER JOIN department_view d
@@ -174,16 +179,17 @@ LEFT JOIN num_teammate_absent
   
   
   * `schema\8_array_agg_shift_times.sql`
-  ```CREATE VIEW array_agg_shift_times AS
+  ```
+  CREATE VIEW array_agg_shift_times AS
 	SELECT employee_id,shift_date,array_agg(shift_start_time) AS shift_start_time,array_agg(shift_end_time) AS 	   shift_end_time
 	FROM main_table
 	GROUP BY employee_id,shift_date
   ```
-  SELECT * FROM 8_array_agg_shift_times`
+  `SELECT * FROM 8_array_agg_shift_times`
   [!Image ]()
   
     * `schema\9_final_table.sql`
-  ```--FINAL TABLE
+  ```
 CREATE VIEW final_table AS
 SELECT 
 mt.employee_id,
@@ -205,7 +211,7 @@ FROM semi_final_table mt
 INNER JOIN array_agg_shift_times ag
 	ON (mt.employee_id,mt.shift_date) = (ag.employee_id,ag.shift_date)
   ```
-  SELECT * FROM final_table`
+  `SELECT * FROM final_table`
   [!Image ]()
   
   
