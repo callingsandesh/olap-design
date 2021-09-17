@@ -79,6 +79,7 @@ GROUP BY agg_main_table.employee_id,agg_main_table.shift_date
   ```
   It will create aggregate of difference columns like hours_worked,has_taken_break,break_hour,was_charge,charge_hour,was_on_call,on_call_hour FROM the `main_table`
   
+  `SELECT * FROM main_table_agg`
   ![Image](https://github.com/callingsandesh/olap-design/blob/day_4/Day4/docs/SS%20of%20tables/2_main_table_agg.png)
   
   
