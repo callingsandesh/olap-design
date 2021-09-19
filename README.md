@@ -2,8 +2,11 @@
 
 # Requirement identification
 -To find out the trends among the customers.
--To analyze their sales to invest more on product that are selling fast
--To analyze their sales to invest more on product that are producing high profits
+
+-To analyze their sales to invest more on product that are selling fast.
+
+-To analyze their sales to invest more on product that are producing high profits.
+
 -To analyze the sales to remove the potential products that are not doing so good.
 
 
