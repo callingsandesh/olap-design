@@ -13,10 +13,20 @@
 - product brand
 - product categoty
 
-# The entities and list of their attributes are:
-- dim_uom
--- id
--- type
+# The list of entities proposed are:
+1. dim_uom
+	** id
+	** type
+2. dim_brand
+3. dim_category
+4. dim_status
+5. fact_product
+6. fact_sales_product
+7. dim_customer
+8. fact_sales
+
+
+ 
 # Proposed ER diagram of the warehouse
 
 
