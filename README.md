@@ -8,9 +8,16 @@
 # Potential area of analysis
 - products
 - sales
+- customer
+- location
+- product brand
+- product categoty
 
-
-
+# The entities and list of their attributes are:
+- dim_uom
+- --id
+- --type
+# Proposed ER diagram of the warehouse
 
 
 
