@@ -186,10 +186,10 @@ CREATE TABLE dim_status(
 ```
 
 > `schema\create_dim_uom`
-``CREATE TABLE dim_uom(
+```CREATE TABLE dim_uom(
     id SERIAL PRIMARY KEY,
     type VARCHAR(255)
-);`
+);
 ```
 
 > `schema\create_fact_product.sql`
@@ -220,8 +220,8 @@ CREATE TABLE fact_product(
 	FOREIGN KEY(category_id) REFERENCES dim_category(id),
 	CONSTRAINT fk_fact_product_dim_status
 	FOREIGN KEY(product_status_id) REFERENCES dim_status(id)
-);
-```
+);```
+
 # I populated the above dimention table first and then the `fact_product` using the following query on the pipeline.
 
 ```
