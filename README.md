@@ -15,8 +15,8 @@
 
 # The entities and list of their attributes are:
 - dim_uom
-- -- id
-- -- type
+-- id
+-- type
 # Proposed ER diagram of the warehouse
 
 
