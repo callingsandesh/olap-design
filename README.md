@@ -106,7 +106,7 @@ CREATE TABLE customer_dump(
     active CHAR
 );
 ```
-Then dumped the file using the SQL command ,`INSERT INTO customer_dump VALUES(%s,%s,%s,%s,%s,%s,%s)` using the pipeline.
+Then dumped the file using the SQL command ,`INSERT INTO customer_dump VALUES(%s,%s,%s,%s,%s,%s,%s)` using the `pipeline\extract_csv_data_into_database_tables.py`.
 
 > `schema\create_table_product_dump.sql`
 ```
@@ -129,7 +129,7 @@ CREATE TABLE product_dump(
 	updated_date VARCHAR(255)
 )
 ```
-Then dumped the file using the SQL command ,`INSERT INTO product_dump VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);` using the pipeline.
+Then dumped the file using the SQL command ,`INSERT INTO product_dump VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);` using the `pipeline\extract_csv_data_into_database_tables.py`.
 
 > `schema\create_table_sales_dump.sql`
 ```
@@ -156,7 +156,8 @@ CREATE TABLE sales_dump(
 	updated_date VARCHAR(255)
 );
 ```
-Then dumped the file using the SQL command ,`INSERT INTO sales_dump VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);` using the pipeline.
+Then dumped the file using the SQL command ,`INSERT INTO sales_dump VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);` using the `pipeline\extract_csv_data_into_database_tables.py`
+
 
 
 ### I created `fact_product` after creating it dimentions tables like `dim_uom` , `dim_brand`,`dim_category`,`dim_status`.
@@ -223,6 +224,8 @@ CREATE TABLE fact_product(
 );
 ```
 
+
+
 ### I populated the above dimention table first and then the `fact_product` using the following query on the pipeline.
 
 ```
@@ -278,6 +281,10 @@ INNER JOIN dim_category
 INNER JOIN dim_status
 	ON product_dump.active = dim_status.type
 ```
+I used the `pipeline\extract_data_into_product_dim_and_fact.py` pipeline to populated the data from the dump table created above.
+
+`SELECT * FROM fact_product LIMIT 20`
+![Image ]()
 
 ### After all the facts and dimention table of product was created , I made the `fact_sales_product` using the following query
 > `schema\create_fact_sales_product.sql`
@@ -324,7 +331,7 @@ I grouped by using date and product_id and  use the aggregate function to fectch
 
 After the `fact_sale_product` table was populated , I did some query to analyse the data.
 
-> SELECTING PRODUCT WITH HIGHEST SELLS ON EACH DAY BASIS
+> CREATING VIEW TO SELECT TOTAL NUMBER OF EACH PRODUCT SOLD ON DAILY BASIS.
 ```
 CREATE  OR REPLACE VIEW date_product_id_total_bill AS
 SELECT 
@@ -339,12 +346,12 @@ GROUP BY date
 )
 ORDER BY date
 ```
-`SELECT * FROM date_product_id_total_bill `
+`SELECT * FROM date_product_id_total_bill  LIMIT 20`
 
 ![Image ]()
 
 
-> TOTAL SALES OF EACH PRODUCT ON DAILY BASIS
+> TOTAL SALES OF EACH PRODUCTS
 ```
 SELECT 
 	e.product_id,
@@ -366,9 +373,8 @@ INNER JOIN dim_category c
 
 ![Image ]()
 
-> TOTAL PRODUCTS THAT ARE NOT SOLD YET
+> 30 PRODUCTS THAT ARE NOT SOLD YET
 ```
---TOTAL PRODUCTS THAT ARE NOT SOLD YET
 SELECT 
 	p.product_id,
 	p.product_name,
@@ -384,6 +390,7 @@ INNER JOIN dim_brand b
 INNER JOIN dim_category c
 	ON p.category_id = c.id
 WHERE e.product_id IS NULL
+LIMIT 30
 ```
 
 ![Image ]()
