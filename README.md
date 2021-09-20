@@ -85,13 +85,13 @@
 	* updated_date
 
  
-# Proposed ER diagram of the warehouse
+## Proposed ER diagram of the warehouse
 
 ![Image ]()
 
 After the logical modelling was purposed , I went to the physical implementation of it.
 
-# Firstly I created different tables to dump the flat files datas.
+## Firstly I created different tables to dump the flat files datas.
 
 >`schema\create_table_customer_dump.sql`
 
@@ -159,7 +159,7 @@ CREATE TABLE sales_dump(
 Then dumped the file using the SQL command ,`INSERT INTO sales_dump VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);` using the pipeline.
 
 
-# I created `fact_product` after creating it dimentions tables like `dim_uom` , `dim_brand`,`dim_category`,`dim_status`.
+### I created `fact_product` after creating it dimentions tables like `dim_uom` , `dim_brand`,`dim_category`,`dim_status`.
 > `schema\create_dim_brand.sql`
 ```
 CREATE TABLE dim_brand(
@@ -220,9 +220,10 @@ CREATE TABLE fact_product(
 	FOREIGN KEY(category_id) REFERENCES dim_category(id),
 	CONSTRAINT fk_fact_product_dim_status
 	FOREIGN KEY(product_status_id) REFERENCES dim_status(id)
-);```
+);
+```
 
-# I populated the above dimention table first and then the `fact_product` using the following query on the pipeline.
+### I populated the above dimention table first and then the `fact_product` using the following query on the pipeline.
 
 ```
 INSERT INTO dim_brand(name)
@@ -278,7 +279,7 @@ INNER JOIN dim_status
 	ON product_dump.active = dim_status.type
 ```
 
-After all the facts and dimention table of product was created , I made the `fact_sales_product` using the following query
+### After all the facts and dimention table of product was created , I made the `fact_sales_product` using the following query
 > `schema\create_fact_sales_product.sql`
 
 ```
