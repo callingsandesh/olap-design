@@ -18,20 +18,81 @@
 	* id
 	* type
 2. dim_brand
+	* id
+	* name
 3. dim_category
+	* id
+	* name
 4. dim_status
+	* id
+	* type
 5. fact_product
+	* product_id
+	* product_name
+	* description
+	* price
+	* mrp
+	* pieces_per_case
+	* weight_per_pieces
+	* uom_id
+	* brand_id
+	* category_id
+	* tax_percent
+	* product_status_id
+	* created_by
+	* created_date
+	* updated_by
+	* updated_date
 6. fact_sales_product
+	* id
+	* date
+	* product_id
+	* total_quantity
+	* price
+	* total_gross_price
+	* total_customers
+	* total_tax_amount
+	* totall_bill_amount
 7. dim_customer
+	* customer_id
+	* user_name
+	* first_name
+	* last_name
+	* country
+	* town
+	* active
 8. fact_sales
-
+	* id
+	* client_sales_id
+	* transaction_id
+	* bill_no
+	* bill_date
+	* bill_location
+	* customer_id
+	* product_id
+	* qty
+	* uom_id
+	* price
+	* gross_price
+	* tax_pc
+	* tax_amt
+	* discount_pc
+	* discount_amt
+	* net_bill_amt
+	* created_by
+	* updated_by
+	* created_date
+	* updated_date
 
  
 # Proposed ER diagram of the warehouse
 
+![Image ]()
 
+After the logical modelling was purposed , I went to the physical implementation of it.
 
 # Firstly I created different tables to dump the flat files datas.
+
 >`schema\create_table_customer_dump.sql`
 
 ```
@@ -97,4 +158,4 @@ CREATE TABLE sales_dump(
 ```
 Then dumped the file using the SQL command ,`INSERT INTO sales_dump VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);` using the pipeline.
 
-After dumping all of the files , i had the closer look at the datas and the proper requirement analysis of it
+
