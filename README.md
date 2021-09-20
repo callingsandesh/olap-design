@@ -324,7 +324,7 @@ I grouped by using date and product_id and  use the aggregate function to fectch
 
 After the `fact_sale_product` table was populated , I did some query to analyse the data.
 
-### SELECTING PRODUCT WITH HIGHEST SELLS ON EACH DAY BASIS
+> SELECTING PRODUCT WITH HIGHEST SELLS ON EACH DAY BASIS
 ```
 CREATE  OR REPLACE VIEW date_product_id_total_bill AS
 SELECT 
@@ -366,7 +366,7 @@ INNER JOIN dim_category c
 
 ![Image ]()
 
-### TOTAL PRODUCTS THAT ARE NOT SOLD YET
+> TOTAL PRODUCTS THAT ARE NOT SOLD YET
 ```
 --TOTAL PRODUCTS THAT ARE NOT SOLD YET
 SELECT 
@@ -390,7 +390,7 @@ WHERE e.product_id IS NULL
 
 
 
-### TOTAL SALES BY BRAND
+> TOTAL SALES BY BRAND
 ```
 SELECT 
 	
@@ -425,5 +425,116 @@ INNER JOIN dim_category c
 GROUP BY category
 ORDER BY total_sales DESC
 ```
+![Image ]()
 
+
+### After that i thought of extraxting some customer trend , like sells on the basis of location,loyal customers.
+
+For this I made the `dim_customer` and `fact_sales` table.
+
+> `schema\create_dim_customer.sql`
+```
+CREATE TABLE dim_customer(
+	customer_id INTEGER PRIMARY KEY,
+	user_name VARCHAR(255),
+	first_name VARCHAR(255),
+	last_name VARCHAR(255),
+	country VARCHAR(255),
+	town VARCHAR(255),
+	active CHAR
+);
+```
+
+> `schema\create_table_fact_sales.sql`
+```
+CREATE TABLE fact_sales(
+	id SERIAL PRIMARY KEY,
+	client_sales_id VARCHAR(255),
+	transaction_id VARCHAR(255),
+	bill_no VARCHAR(255),
+	bill_date TIMESTAMP,
+	bill_location VARCHAR(255),
+	customer_id INTEGER,
+	product_id INTEGER,
+	qty SMALLINT,
+	uom_id INTEGER,
+	price FLOAT,
+	gross_price FLOAT,
+	tax_pc FLOAT,
+	tax_amount FLOAT,
+	discount_pc FLOAT,
+	discount_amt FLOAT,
+	net_bill_amt FLOAT,
+	created_by VARCHAR,
+	updated_by VARCHAR(255),
+	created_date VARCHAR(255),
+	updated_date VARCHAR(255),
+	
+	CONSTRAINT fk_fact_sales_customer_customer_id
+	FOREIGN KEY(customer_id) REFERENCES dim_customer(customer_id),
+	
+	CONSTRAINT fk_fact_sales_product_product_id
+	FOREIGN KEY(product_id) REFERENCES fact_product(product_id),
+	
+	CONSTRAINT fk_fact_sales_uom_uom_id 
+	FOREIGN KEY(uom_id) REFERENCES dim_uom(id)
+)
+```
+After that I populated the data into the dimention table first(`dim_customer`) and then the fact table (`fact_sales`)
+
+```
+INSERT INTO dim_customer VALUES(%s,%s,%s,%s,%s,%s,%s);`
+```
+I used the pipeline from `pipeline\extract_data_into_customer_dim.py`
+ to fetch the .csv file and populate into the above `dim_customer` table.
+ 
+ ```
+ SELECT 
+	sales_dump.id,
+	transaction_id,
+	bill_no,
+	CASE WHEN bill_date='2017-02-30 11:00:00' THEN TO_TIMESTAMP('2017-02-28 11:00:00','YYYY-MM-DD HH24:MI:SS')
+	     ELSE TO_TIMESTAMP(bill_date,'YYYY-MM-DD HH24:MI:SS')
+		 END bill_date_corrected,
+	bill_location,
+	CAST(customer_id AS INT),
+	CAST(product_id AS INT),
+	CAST(qty AS INT),
+	dim_uom.id,
+	CAST(price AS FLOAT),
+	CAST(gross_price AS FLOAT),
+	CAST(tax_pc AS FLOAT),
+	CAST(tax_amount AS FLOAT),
+	CAST(discount_pc AS FLOAT),
+	CAST(discount_amt AS FLOAT),
+	CAST(net_bill_amt AS FLOAT),
+	created_by,
+	updated_by,
+	CASE WHEN created_date='2017-02-30 11:00:00' THEN TO_TIMESTAMP('2017-02-28 11:00:00','YYYY-MM-DD HH24:MI:SS')
+	     ELSE TO_TIMESTAMP(created_date,'YYYY-MM-DD HH24:MI:SS')
+		 END created_date_corrected,
+	CASE WHEN updated_date='2017-02-30 11:00:00' THEN TO_TIMESTAMP('2017-02-28 11:00:00','YYYY-MM-DD HH24:MI:SS')
+	     WHEN updated_date='-' THEN NULL
+	     ELSE TO_TIMESTAMP(updated_date,'YYYY-MM-DD HH24:MI:SS')
+		 END updated_date_corrected
+FROM sales_dump
+INNER JOIN dim_uom
+	ON sales_dump.uom=dim_uom.type
+ ```
+ 
+ I used the above query to populated the data into the `fact_sales` table.
+ 
+ ### After all the data was populated , now its time to show some analysis.
+ 
+ >  total sales by customer locaitons
+ ```
+SELECT dim_customer.town,sum(net_bill_amt) as total_sales
+FROM fact_sales
+INNER JOIN dim_customer
+	ON fact_sales.customer_id=dim_customer.customer_id
+GROUP BY dim_customer.town
+ORDER BY total_sales DESC
+```
+![Image ] ()
+ 
 
