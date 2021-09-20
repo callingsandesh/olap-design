@@ -15,8 +15,8 @@
 
 # The list of entities proposed are:
 1. dim_uom
-	** id
-	** type
+	* id
+	* type
 2. dim_brand
 3. dim_category
 4. dim_status
